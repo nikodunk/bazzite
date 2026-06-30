@@ -337,88 +337,33 @@ RUN --mount=type=cache,dst=/var/cache \
     --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     --mount=type=secret,id=GITHUB_TOKEN \
-    if grep -q "kinoite" <<< "${BASE_IMAGE_NAME}"; then \
-        dnf5 -y install \
-            qt \
-            krdp \
-            steamdeck-kde-presets-desktop \
-            kdeconnectd \
-            kdeplasma-addons \
-            rom-properties-kf6 \
-            fcitx5-chewing \
-            fcitx5-mozc \
-            fcitx5-chinese-addons \
-            fcitx5-hangul \
-            fcitx5-m17n \
-            kcm-fcitx5 \
-            gnome-disk-utility \
-            kio-extras \
-            krunner-bazaar \
-            krdc \
-            tesseract-devel \
-            tesseract-langpack-eng \
-            tesseract-langpack-spa \
-            tesseract-langpack-deu \
-            tesseract-langpack-jpn \
-            tesseract-langpack-jpn_vert \
-            tesseract-langpack-fra \
-            tesseract-langpack-por \
-            tesseract-langpack-rus \
-            tesseract-langpack-ita \
-            tesseract-langpack-nld \
-            tesseract-langpack-pol \
-            tesseract-langpack-tur \
-            tesseract-langpack-chi_sim \
-            tesseract-langpack-chi_sim_vert \
-            tesseract-langpack-chi_tra \
-            tesseract-langpack-chi_tra_vert \
-            tesseract-langpack-ces \
-            tesseract-langpack-ell && \
-        dnf5 -y remove \
-            plasma-drkonqi \
-            plasma-welcome \
-            plasma-welcome-fedora \
-            plasma-discover-kns \
-            kcharselect \
-            kde-partitionmanager \
-            plasma-discover && \
-        sed -i '$r /usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/bazzite-pins.js' /usr/share/plasma/layout-templates/org.kde.plasma.desktop.defaultPanel/contents/layout.js && \
-        ln -sf /usr/share/wallpapers/convergence.jxl /usr/share/backgrounds/default.jxl && \
-        ln -sf /usr/share/wallpapers/convergence.jxl /usr/share/backgrounds/default-dark.jxl && \
-        rm -f /usr/share/backgrounds/default.xml && \
-        mkdir -p /usr/share/wallpapers/bazzite/convergence/contents/images && \
-        ln -s /usr/share/wallpapers/convergence.jxl /usr/share/wallpapers/bazzite/convergence/contents/images/3940x2160.jxl \
-    ; else \
-        dnf5 -y install \
-            nautilus-gsconnect \
-            steamdeck-backgrounds \
-            steamdeck-gnome-presets \
-            gnome-shell-extension-user-theme \
-            gnome-shell-extension-gsconnect \
-            rom-properties-gtk4 \
-            rom-properties-localsearch3 \
-            ibus-mozc \
-            openssh-askpass \
-            firewall-config && \
-        dnf5 -y remove \
-            gnome-software \
-            gnome-classic-session \
-            gnome-tour \
-            gnome-extensions-app \
-            gnome-system-monitor \
-            gnome-initial-setup \
-            gnome-shell-extension-background-logo \
-            gnome-shell-extension-apps-menu \
-            gnome-shell-extension-launch-new-instance \
-            gnome-shell-extension-places-menu \
-            gnome-shell-extension-window-list && \
-        /ctx/ghcurl "https://raw.githubusercontent.com/jlu5/icoextract/master/exe-thumbnailer.thumbnailer" -Lo /usr/share/thumbnailers/exe-thumbnailer.thumbnailer && \
-        setfattr -n user.component -v "exe-thumbnailer" /usr/share/thumbnailers/exe-thumbnailer.thumbnailer && \
-        /ctx/build-gnome-extensions && \
-        systemctl enable dconf-update.service \
-    ; fi && \
     dnf5 -y install \
-        rom-properties-utils && \
+        nautilus-gsconnect \
+        steamdeck-backgrounds \
+        steamdeck-gnome-presets \
+        gnome-shell-extension-user-theme \
+        gnome-shell-extension-gsconnect \
+        rom-properties-gtk4 \
+        rom-properties-localsearch3 \
+        ibus-mozc \
+        openssh-askpass \
+        firewall-config && \
+    dnf5 -y remove \
+        gnome-software \
+        gnome-classic-session \
+        gnome-tour \
+        gnome-extensions-app \
+        gnome-system-monitor \
+        gnome-initial-setup \
+        gnome-shell-extension-background-logo \
+        gnome-shell-extension-apps-menu \
+        gnome-shell-extension-launch-new-instance \
+        gnome-shell-extension-places-menu \
+        gnome-shell-extension-window-list && \
+    /ctx/ghcurl "https://raw.githubusercontent.com/jlu5/icoextract/master/exe-thumbnailer.thumbnailer" -Lo /usr/share/thumbnailers/exe-thumbnailer.thumbnailer && \
+    setfattr -n user.component -v "exe-thumbnailer" /usr/share/thumbnailers/exe-thumbnailer.thumbnailer && \
+    /ctx/build-gnome-extensions && \
+    systemctl enable dconf-update.service \
     /ctx/cleanup
 
 # ublue-os-media-automount-udev, mount non-removable device partitions automatically under /media/media-automount/
