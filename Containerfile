@@ -1,6 +1,6 @@
-ARG BASE_IMAGE_NAME="${BASE_IMAGE_NAME:-kinoite}"
-ARG FEDORA_VERSION="${FEDORA_VERSION:-44}"
-ARG ARCH="${ARCH:-x86_64}"
+ARG BASE_IMAGE_NAME="silverblue"
+ARG FEDORA_VERSION="44"
+ARG ARCH="x86_64"
 
 ARG BASE_IMAGE="${BASE_IMAGE:-ghcr.io/ublue-os/${BASE_IMAGE_NAME}-main:${FEDORA_VERSION}}"
 ARG NVIDIA_BASE="${NVIDIA_BASE:-bazzite}"
@@ -317,55 +317,6 @@ RUN --mount=type=cache,dst=/var/cache \
     mkdir -p /etc/xdg/autostart && \
     sed -i~ -E 's/=.\$\(command -v (nft|ip6?tables-legacy).*/=/g' /usr/lib/waydroid/data/scripts/waydroid-net.sh && \
     sed -i 's/ --xdg-runtime=\\"${XDG_RUNTIME_DIR}\\"//g' /usr/bin/btrfs-assistant-launcher && \
-    /ctx/cleanup
-
-# Install Steam & Lutris, plus supporting packages
-RUN --mount=type=cache,dst=/var/cache \
-    --mount=type=cache,dst=/var/cache/libdnf5 \
-    --mount=type=cache,dst=/var/log \
-    --mount=type=bind,from=ctx,source=/,target=/ctx \
-    --mount=type=tmpfs,dst=/tmp \
-    --mount=type=secret,id=GITHUB_TOKEN \
-    dnf5 -y install \
-        dmemcg-booster && \
-    if grep -q "kinoite" <<< "${BASE_IMAGE_NAME}"; then \
-        dnf5 -y install \
-            plasma-foreground-booster-dmemcg \
-    ; else \
-        dnf5 -y swap \
-        --repo terra-extras \
-            uresourced uresourced-dmemcg \
-    ; fi && \
-    dnf5 --enable-repo=terra-mesa --enable-repo=terra -y install \
-        terra-gamescope.x86_64 \
-        terra-gamescope-libs.x86_64 \
-        terra-gamescope-libs.i686 \
-        jupiter-sd-mounting-btrfs \
-        umu-wrapper \
-        umu-launcher \
-        dbus-x11 \
-        xrandr \
-        evtest \
-        xdg-user-dirs \
-        xdg-terminal-exec \
-        gobject-introspection \
-        libFAudio.x86_64 \
-        libFAudio.i686 \
-        vkBasalt.x86_64 \
-        vkBasalt.i686 \
-        mangohud.x86_64 \
-        mangohud.i686 \
-        obs-studio-plugin-vkcapture-hook-libs.x86_64 \
-        obs-studio-plugin-vkcapture-hook-libs.i686 \
-        openxr && \
-    dnf5 -y --enable-repo=terra-mesa --enable-repo=terra --setopt=install_weak_deps=False install \
-        steam \
-        lutris && \
-    dnf5 -y remove \
-        gamemode && \
-    /ctx/ghcurl "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks" -Lo /usr/bin/winetricks && \
-    chmod +x /usr/bin/winetricks && \
-    setfattr -n user.component -v "winetricks" /usr/bin/winetricks && \
     /ctx/cleanup
 
 # Install ujust-picker from GitHub releases
